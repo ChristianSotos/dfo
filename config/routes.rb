@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  get 'lineups/index'
+  get 'rankings' => 'rankings#index'
+  post 'rankings' => 'rankings#upload'
 
   get 'home/index'
 
