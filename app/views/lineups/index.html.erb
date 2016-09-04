@@ -1,441 +1,71 @@
-<<<<<<< HEAD
-<% for i in 0...@ol.count do %>
-	<p><%=@ol[i].roster%></p>
-<% end %>
-
-
-<% for i in 0...@lineups.count do 
-	for j in 0...@lineups[i].roster.count do %>
-	<p><%=@lineups[i].roster[j].position%>: <%=@lineups[i].roster[j].name%></p>
-		<ul>
-			<li>$<%=@lineups[i].roster[j].price%></li>
-			<li>Scores: <%=@lineups[i].roster[j].min_score%>, <%=@lineups[i].roster[j].avg_score%>, <%=@lineups[i].roster[j].max_score%></li>
-		</ul>
-	<% end %>
-	<p>Price: $<%=@lineups[i].price%></p>
-	<p>Min Score: <%=@lineups[i].min_score%></p>
-	<p>Max Score: <%=@lineups[i].max_score%></p>
-	<p>Estimated Score: <%=@lineups[i].avg_score%></p>
-	<br>
-<% end %>
-
 <div id="container" class="row">
 	<div id="avg-lineups" class="small-12 columns lineup-group">
 		<h2>Best Overall Lineups</h2>
 		<div class="row">
+		<%for i in 0...6 do %>
 			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #1</h5>
+				<h5>Lineup <%=i+1%></h5>
 				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
+				<% for j in 0...@ol[i].roster.count do%>
+					<li><%=@ol[i].roster[j].position%>: <%=@ol[i].roster[j].name%></li>
+				<%end%>
 				</ul>
 				<h5>Scores</h5>
 				<ul>
-					<li>Average Score: 151</li>
-					<li>High Score: 191</li>
-					<li>Low Score: 97</li>
+					<li>Average Score: <%=@ol[i].avg_score.floor%></li>
+					<li>High Score: <%=@ol[i].max_score.floor%></li>
+					<li>Low Score: <%=@ol[i].min_score.floor%></li>
 				</ul>
 				<h5>Total Budget</h5>
-				<p>$69,300</p>
+				<p>$<%=@ol[i].price%></p>
 			</div>
-			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #2</h5>
-				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
-				</ul>
-				<h5>Scores</h5>
-				<ul>
-					<li>Average Score: 151</li>
-					<li>High Score: 191</li>
-					<li>Low Score: 97</li>
-				</ul>
-				<h5>Total Budget</h5>
-				<p>$69,300</p>
-			</div>
-			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #3</h5>
-				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
-				</ul>
-				<h5>Scores</h5>
-				<ul>
-					<li>Average Score: 151</li>
-					<li>High Score: 191</li>
-					<li>Low Score: 97</li>
-				</ul>
-				<h5>Total Budget</h5>
-				<p>$69,300</p>
-			</div>
-			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #4</h5>
-				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
-				</ul>
-				<h5>Scores</h5>
-				<ul>
-					<li>Average Score: 151</li>
-					<li>High Score: 191</li>
-					<li>Low Score: 97</li>
-				</ul>
-				<h5>Total Budget</h5>
-				<p>$69,300</p>
-			</div>
-			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #5</h5>
-				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
-				</ul>
-				<h5>Scores</h5>
-				<ul>
-					<li>Average Score: 151</li>
-					<li>High Score: 191</li>
-					<li>Low Score: 97</li>
-				</ul>
-				<h5>Total Budget</h5>
-				<p>$69,300</p>
-			</div>
-			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #6</h5>
-				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
-				</ul>
-				<h5>Scores</h5>
-				<ul>
-					<li>Average Score: 151</li>
-					<li>High Score: 191</li>
-					<li>Low Score: 97</li>
-				</ul>
-				<h5>Total Budget</h5>
-				<p>$69,300</p>
-			</div>
-		</div>	
+		<%end%>
+		</div>
 	</div>
 	<div id="high-lineups" class="small-12 columns lineup-group">
 		<h2>Highest Ceiling Lineups</h2>
 		<div class="row">
+			<%for i in 0...6 do %>
 			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #1</h5>
+				<h5>Lineup <%=i+1%></h5>
 				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
+				<% for j in 0...@rl[i].roster.count do%>
+					<li><%=@rl[i].roster[j].position%>: <%=@rl[i].roster[j].name%></li>
+				<%end%>
 				</ul>
 				<h5>Scores</h5>
 				<ul>
-					<li>High Score: 191</li>
-					<li>Average Score: 151</li>
-					<li>Low Score: 97</li>
+					<li>Average Score: <%=@rl[i].avg_score.floor%></li>
+					<li>High Score: <%=@rl[i].max_score.floor%></li>
+					<li>Low Score: <%=@rl[i].min_score.floor%></li>
 				</ul>
 				<h5>Total Budget</h5>
-				<p>$69,300</p>
+				<p>$<%=@rl[i].price%></p>
 			</div>
-			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #2</h5>
-				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
-				</ul>
-				<h5>Scores</h5>
-				<ul>
-					<li>High Score: 191</li>
-					<li>Average Score: 151</li>
-					<li>Low Score: 97</li>
-				</ul>
-				<h5>Total Budget</h5>
-				<p>$69,300</p>
-			</div>
-			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #3</h5>
-				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
-				</ul>
-				<h5>Scores</h5>
-				<ul>
-					<li>High Score: 191</li>
-					<li>Average Score: 151</li>
-					<li>Low Score: 97</li>
-				</ul>
-				<h5>Total Budget</h5>
-				<p>$69,300</p>
-			</div>
-			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #4</h5>
-				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
-				</ul>
-				<h5>Scores</h5>
-				<ul>
-					<li>High Score: 191</li>
-					<li>Average Score: 151</li>
-					<li>Low Score: 97</li>
-				</ul>
-				<h5>Total Budget</h5>
-				<p>$69,300</p>
-			</div>
-			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #5</h5>
-				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
-				</ul>
-				<h5>Scores</h5>
-				<ul>
-					<li>High Score: 191</li>
-					<li>Average Score: 151</li>
-					<li>Low Score: 97</li>
-				</ul>
-				<h5>Total Budget</h5>
-				<p>$69,300</p>
-			</div>
-			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #6</h5>
-				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
-				</ul>
-				<h5>Scores</h5>
-				<ul>
-					<li>High Score: 191</li>
-					<li>Average Score: 151</li>
-					<li>Low Score: 97</li>
-				</ul>
-				<h5>Total Budget</h5>
-				<p>$69,300</p>
-			</div>
-		</div>		
+		<%end%>
+		</div>
 	</div>
 	<div id="low-lineups" class="small-12 columns lineup-group">	
 		<h2>Lowest Risk Lineups</h2>
 		<div class="row">
+			<%for i in 0...6 do %>
 			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #1</h5>
+				<h5>Lineup <%=i+1%></h5>
 				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
+				<% for j in 0...@sl[i].roster.count do%>
+					<li><%=@sl[i].roster[j].position%>: <%=@sl[i].roster[j].name%></li>
+				<%end%>
 				</ul>
 				<h5>Scores</h5>
 				<ul>
-					<li>Low Score: 97</li>
-					<li>Average Score: 151</li>
-					<li>High Score: 191</li>
+					<li>Average Score: <%=@sl[i].avg_score.floor%></li>
+					<li>High Score: <%=@sl[i].max_score.floor%></li>
+					<li>Low Score: <%=@sl[i].min_score.floor%></li>
 				</ul>
 				<h5>Total Budget</h5>
-				<p>$69,300</p>
+				<p>$<%=@sl[i].price%></p>
 			</div>
-			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #2</h5>
-				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
-				</ul>
-				<h5>Scores</h5>
-				<ul>
-					<li>Low Score: 97</li>
-					<li>Average Score: 151</li>
-					<li>High Score: 191</li>
-				</ul>
-				<h5>Total Budget</h5>
-				<p>$69,300</p>
-			</div>
-			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #3</h5>
-				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
-				</ul>
-				<h5>Scores</h5>
-				<ul>
-					<li>Low Score: 97</li>
-					<li>Average Score: 151</li>
-					<li>High Score: 191</li>
-				</ul>
-				<h5>Total Budget</h5>
-				<p>$69,300</p>
-			</div>
-			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #4</h5>
-				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
-				</ul>
-				<h5>Scores</h5>
-				<ul>
-					<li>Low Score: 97</li>
-					<li>Average Score: 151</li>
-					<li>High Score: 191</li>
-				</ul>
-				<h5>Total Budget</h5>
-				<p>$69,300</p>
-			</div>
-			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #5</h5>
-				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
-				</ul>
-				<h5>Scores</h5>
-				<ul>
-					<li>Low Score: 97</li>
-					<li>Average Score: 151</li>
-					<li>High Score: 191</li>
-				</ul>
-				<h5>Total Budget</h5>
-				<p>$69,300</p>
-			</div>
-			<div class="small-6 medium-4 large-2 columns lineup">
-				<h5>Lineup #6</h5>
-				<ul>
-					<li>QB: Derek Carr</li>
-					<li>RB: Todd Gurley</li>
-					<li>RB: DeAngelo Williams</li>
-					<li>WR: Antonio Brown</li>
-					<li>WR: Julio Jones</li>
-					<li>WR: Odell Beckham, Jr.</li>
-					<li>TE: Robb Gronkowski</li>
-					<li>K: Chandler Catanzaro</li>
-					<li>DEF: Minnesota Vikings</li>
-				</ul>
-				<h5>Scores</h5>
-				<ul>
-					<li>Low Score: 97</li>
-					<li>Average Score: 151</li>
-					<li>High Score: 191</li>
-				</ul>
-				<h5>Total Budget</h5>
-				<p>$69,300</p>
-			</div>
-		</div>	
+		<%end%>
+		</div>
 	</div>
 </div>
-
-
-<% for i in 0..@lineups.count do %>
-	<p><%=@lineups[i]%></p>
-<% end %>
-
-

@@ -46,6 +46,8 @@
 	}
 	.lineup-group ul{
 		list-style-type: none;
+		margin: 1%;
+		padding: 1%;
 	}
 
 .lineup, #home-form {
