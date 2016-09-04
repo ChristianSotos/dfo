@@ -15,11 +15,11 @@
 //= require turbolinks
 //= require_tree .
 $(document).ready(function(){
-	$('form').submit(function(){
-		url =  "http://www.fantasyfootballnerd.com/service/weekly-rankings/json/az3uzjv2qfsd/QB/1/1/"
-		$.get(url, function(res){
-			console.log(res);
-		})
-		return false;
-	})
+	// $('form').submit(function(){
+	// 	url =  "http://www.fantasyfootballnerd.com/service/weekly-rankings/json/az3uzjv2qfsd/QB/1/1/";
+	// 	$.get(url, function(res){
+	// 		console.log(res);
+	// 	})
+	// 	return false;
+	// })
 })

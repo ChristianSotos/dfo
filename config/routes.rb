@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  get 'lineups/index'
+  post 'lineups' => "lineups#index"
 
   get 'home/index'
 

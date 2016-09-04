@@ -1,6 +1,6 @@
 <form action='/lineups' method='post'>
 	<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
-	<input type='radio' name='scoring' value='standard'><label>Standard</label>
-	<input type='radio' name='scoring' value='ppr'><label>PPR</label>
+	<input type='radio' name='scoring' value='0'><label>Standard</label>
+	<input type='radio' name='scoring' value='1'><label>PPR</label>
 	<button>Optimize Lineups</button>
 </form>
