@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
   post 'lineups' => "lineups#index"
+
+  post 'lineups' => "lineups#index"
+
   get 'rankings' => 'rankings#index'
   post 'rankings' => 'rankings#upload'
 

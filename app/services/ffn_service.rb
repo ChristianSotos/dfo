@@ -3,7 +3,7 @@ class FfnService
 	$positions = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF']
 
 	def self.call(scoring, week)
-		players = []
+		players = {}
 		for i in 0..6 do
 		  	uri = URI.parse([BASE_PATH, $positions[i], week, scoring].join('/'))
 		  	http = Net::HTTP.new(uri.host, uri.port)
@@ -15,8 +15,8 @@ class FfnService
 		  	data = response.body
 		  	#to parse JSON string, you may also use JSON.parse()
 		  	#JSON.load() turns the data into a hash
-		  	players << JSON.parse(data)
+		  	players[$positions[i]] = JSON.parse(data)
 		end
-		return players
+		all_lineups = OptimizeService.call(players)
 	end
 end

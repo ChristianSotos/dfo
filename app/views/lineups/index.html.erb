@@ -1,1 +1,4 @@
-<p><%= @lineups %></p>
+<% for i in 0..@lineups.count do %>
+	<p><%=@lineups[i]%></p>
+	<br>
+<% end %>
