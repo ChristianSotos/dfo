@@ -1,7 +1,16 @@
-<form action='/lineups' method='post'>
-	<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
-	<input type='radio' name='scoring' value='0'><label>Standard</label>
-	<input type='radio' name='scoring' value='1'><label>PPR</label>
-	<label>Week</label><input type='text' name='week'>
-	<button>Optimize Lineups</button>
-</form>
+<div class="row" id="home-main">
+	<div class="small-6 small-centered column">
+		<h1 id="home-header">DFF Lineup Optimizer</h1>
+		<%=image_tag('draftkingswinner.jpg')%>
+		<h3>This could be you.</h3>
+		<p>Generate the best possible daily fantasy football (DFF) lineups at the click of a button. Our algorithm utilizes player rankings and predictions from the most-accurate fantasy football prediction website, FantasyFootballNerd.com, which aggregates weekly player rankings from every top fantasy football analyst in the world.</p>
+		<form id="home-form" action='/lineups' method='post'>
+			<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+			<label>League Scoring</label>
+			<input type='radio' name='scoring' value='0'><label>Standard</label>
+			<input type='radio' name='scoring' value='1'><label>PPR</label>
+			<label>Week</label><input type='text' name='week'>
+			<button class="centered">Optimize Lineups</button>
+		</form>
+	</div>
+</div>
