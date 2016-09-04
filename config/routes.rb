@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
+<<<<<<< HEAD
   post 'lineups' => "lineups#index"
+=======
+  get 'rankings' => 'rankings#index'
+  post 'rankings' => 'rankings#upload'
+>>>>>>> 5cd16aa24630ea26b7fe1fd96c241873d34c3c19
 
   get 'home/index'
 
