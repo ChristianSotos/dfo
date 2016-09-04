@@ -5,7 +5,6 @@ class OptimizeService
 	end
 
 	def call(players)
-
 		@all_lineups = []
 
 		players['QB']['Rankings'].each do |player|
