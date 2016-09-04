@@ -8,6 +8,6 @@ class LineupsController < ApplicationController
   private
 
   def lineup_collection_params
-  	params.permit(:scoring)
+  	params.permit(:scoring, :week)
   end
 end
