@@ -2,21 +2,21 @@ class LineupService
 	def self.call(params)
 	  #binding.pry
       all_lineups = FfnService.call(params['scoring'], params['week'])
-      lineups = self.create_lineups(all_lineups)
+      #lineups = self.create_lineups(all_lineups)
 	end
-	def self.create_lineups(lineups)
-		finished_lineups = Array.new
-		for i in 0...lineups.count do
-			new_l = Lineup.new
-			lineup = lineups[i].to_a
-			for j in 0...9 do
-				player = lineup[j].to_h
-				new_l.add_player(player['position'], player['name'], player['pprLow'], player['pprHigh'], player['ppr'], player['price'])
-			end 
-			finished_lineups << new_l
-		end
-		finished_lineups
-	end
+	# def self.create_lineups(lineups)
+	# 	finished_lineups = Array.new
+	# 	for i in 0...lineups.count do
+	# 		new_l = Lineup.new
+	# 		lineup = lineups[i].to_a
+	# 		for j in 0...9 do
+	# 			player = lineup[j].to_h
+	# 			new_l.add_player(player['position'], player['name'], player['pprLow'], player['pprHigh'], player['ppr'], player['price'])
+	# 		end 
+	# 		finished_lineups << new_l
+	# 	end
+	# 	finished_lineups
+	# end
 end
 
 class Lineup

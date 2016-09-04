@@ -9,7 +9,7 @@ class LineupsController < ApplicationController
 	@sl << @lineups[0]
 	@rl << @lineups[0]
 	@ol << @lineups[0]
-	for j in 0...@lineups.count
+	for j in 1...@lineups.count
 		push = true
 		for i in 0...@sl.count do
 			if @lineups[j].min_score >= @sl[i].min_score
@@ -48,14 +48,6 @@ class LineupsController < ApplicationController
 			push = true
 		end
 	end
-	# @safe_lineups = Array.new
-	# @risk_lineups = Array.new
-	# @opt_lineups = Array.new
-	# for i in 0..5 do
-	# 	@safe_lineups << sl[i]
-	# 	@risk_lineups << rl[i]
-	# 	@opt_lineups << ol[i]
-	# end
   end
 
   private

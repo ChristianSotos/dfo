@@ -1,4 +1,4 @@
-class OptimizeService
+class Test
 
 	def self.call(players)
 		new.call(players)
@@ -8,10 +8,16 @@ class OptimizeService
 		@all_lineups = []
 
 		players['QB']['Rankings'].each do |player|
-			lineup = Lineup.new
+			lineup = []
 			player_db = Player.find_by(name: player['name'])
 			if player_db
-				lineup.add_player(player['position'], player['name'], player['pprLow'], player['pprHigh'], player['ppr'], player_db.price)
+				player_cost = player_db.price
+				lineup_sum = player_cost
+				lineup_scores = {
+					'min_score' => player['pprLow'].to_i,
+					'max_score' => player['pprHigh'].to_i,
+					'avg_score' => player['ppr'].to_i 
+				}
 				lineup_count = {
 					'QB' => 0,
 					'RB' => 2,
@@ -20,10 +26,12 @@ class OptimizeService
 					'K' => 1,
 					'DEF' => 1
 				}
+				player['price'] = player_cost
+				lineup << player
 				players_used = {
 					player['name'] => true
 				}
-				helper(lineup, lineup_count, players_used, players)
+				helper(lineup, lineup_sum, lineup_scores, lineup_count, players_used, players)
 			end
 		end
 		return all_lineups
@@ -33,10 +41,10 @@ class OptimizeService
 
 	attr_accessor :all_lineups
 
-		def helper(lineup, lineup_count, players_used, players)
-			# if lineup.price > 75000
-			# 	return false
-			# end
+		def helper(lineup, lineup_sum, lineup_scores, lineup_count, players_used, players)
+			if lineup_sum > 70000
+				return false
+			end
 			complete = true
 			lineup_count.each do |pos|
 				if pos[1] > 0
@@ -45,6 +53,8 @@ class OptimizeService
 				end
 			end
 			if complete
+				lineup << lineup_sum
+				lineup << lineup_scores
 				all_lineups << lineup
 			end
 			lineup_count.each do |pos|
@@ -53,11 +63,17 @@ class OptimizeService
 						if !players_used.has_key?(player['name'])
 							player_db = Player.find_by(name: player['name'])
 							if player_db
-								lineup.add_player(player['position'], player['name'], player['pprLow'], player['pprHigh'], player['ppr'], player_db.price)
+								player_cost = player_db.price
+								lineup_sum += player_cost
+								lineup_scores['min_score'] += player['pprLow'].to_i
+								lineup_scores['max_score'] += player['pprHigh'].to_i
+								lineup_scores['avg_score'] += player['ppr'].to_i
 								lineup_count[pos[0]] -= 1
+								player['price'] = player_cost
+								lineup << player
 							end
 							players_used[player['name']] = true
-							return helper(lineup, lineup_count, players_used, players)
+							return helper(lineup, lineup_sum, lineup_scores, lineup_count, players_used, players)
 						end
 					end
 				end
