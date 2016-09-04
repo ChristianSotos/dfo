@@ -1,3 +1,23 @@
+<<<<<<< HEAD
+<% for i in 0...@ol.count do %>
+	<p><%=@ol[i].roster%></p>
+<% end %>
+
+
+<% for i in 0...@lineups.count do 
+	for j in 0...@lineups[i].roster.count do %>
+	<p><%=@lineups[i].roster[j].position%>: <%=@lineups[i].roster[j].name%></p>
+		<ul>
+			<li>$<%=@lineups[i].roster[j].price%></li>
+			<li>Scores: <%=@lineups[i].roster[j].min_score%>, <%=@lineups[i].roster[j].avg_score%>, <%=@lineups[i].roster[j].max_score%></li>
+		</ul>
+	<% end %>
+	<p>Price: $<%=@lineups[i].price%></p>
+	<p>Min Score: <%=@lineups[i].min_score%></p>
+	<p>Max Score: <%=@lineups[i].max_score%></p>
+	<p>Estimated Score: <%=@lineups[i].avg_score%></p>
+	<br>
+<% end %>
 
 <div id="container" class="row">
 	<div id="avg-lineups" class="small-12 columns lineup-group">
@@ -414,10 +434,8 @@
 </div>
 
 
-
 <% for i in 0..@lineups.count do %>
 	<p><%=@lineups[i]%></p>
 <% end %>
-
 
 

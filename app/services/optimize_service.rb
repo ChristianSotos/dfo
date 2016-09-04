@@ -26,6 +26,7 @@ class OptimizeService
 					'K' => 1,
 					'DEF' => 1
 				}
+				player['price'] = player_cost
 				lineup << player
 				players_used = {
 					player['name'] => true
