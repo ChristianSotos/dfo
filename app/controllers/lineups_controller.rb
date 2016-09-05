@@ -11,7 +11,13 @@ class LineupsController < ApplicationController
 	@ol << @lineups[0]
 	for j in 1...@lineups.count
 		push = true
-		for i in 0...@sl.count do
+		if j < 6
+			topNum = j
+		else
+			topNum = 6
+		end
+
+		for i in 0...topNum do
 			if @lineups[j].min_score >= @sl[i].min_score
 				@sl.insert(i,@lineups[j])
 				push = false
@@ -23,7 +29,7 @@ class LineupsController < ApplicationController
 		else
 			push = true
 		end
-		for i in 0...@rl.count do
+		for i in 0...topNum do
 			if @lineups[j].max_score >= @rl[i].max_score
 				@rl.insert(i,@lineups[j])
 				push = false
@@ -35,7 +41,7 @@ class LineupsController < ApplicationController
 		else
 			push = true
 		end
-		for i in 0...@ol.count do
+		for i in 0...topNum do
 			if @lineups[j].avg_score >= @ol[i].avg_score
 				@ol.insert(i,@lineups[j])
 				push = false

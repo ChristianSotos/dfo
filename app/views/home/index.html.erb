@@ -3,13 +3,15 @@
 		<h1 id="home-header">DFF Lineup Optimizer</h1>
 		<%=image_tag('draftkingswinner.jpg')%>
 		<h3>This could be you.</h3>
-		<p>Generate the best possible daily fantasy football (DFF) lineups at the click of a button. Our algorithm utilizes player rankings and predictions from the most-accurate fantasy football prediction website, FantasyFootballNerd.com, which aggregates weekly player rankings from every top fantasy football analyst in the world.</p>
+		<p>Generate the best possible daily fantasy football (DFF) lineups at the click of a button. Our algorithm utilizes player rankings and predictions from the most-accurate fantasy football prediction website, FantasyFootballNerd.com, which aggregates weekly player rankings from every top fantasy football analyst in the world. We then combine those predictions with FanDuel's player pricing to figure out which lineups will have the best chance at winning every week.</p>
+		<p>Our team uploads the new FanDuel player pricing CSV every week. All optimized lineups are for the current week only.</p>
 		<form id="home-form" action='/lineups' method='post'>
 			<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
-			<label>League Scoring</label>
+<!-- 			<label>League Scoring</label>
 			<input type='radio' name='scoring' value='0'><label>Standard</label>
 			<input type='radio' name='scoring' value='1'><label>PPR</label>
-			<label>Week</label><input type='text' name='week'>
+			<label>Week</label><input type='text' name='week'> -->
+			<h4>2016 Season: Week 1</h4>
 			<button class="centered">Optimize Lineups</button>
 		</form>
 	</div>

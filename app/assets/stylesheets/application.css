@@ -46,6 +46,8 @@
 	}
 	.lineup-group ul{
 		list-style-type: none;
+		margin: 1%;
+		padding: 1%;
 	}
 
 .lineup, #home-form {
@@ -58,5 +60,17 @@
 		background-color: green;
 		color: white;
 	}
+
+
+.all-lineups{
+	display: inline-block;
+	width: 19%;
+}
+.all-lineups p{
+	margin: 0;
+}
+.all-lineups ul{
+	list-style-type: none;
+}
 
 
