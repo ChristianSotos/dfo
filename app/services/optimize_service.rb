@@ -203,8 +203,6 @@ class OptimizeService
 				end
 				if ((rw_lineup.price.to_i + valid_checker['QB']) <= 60000)
 					qb_helper(rw_lineup)
-				else
-					rw_lineup = nil
 				end
 			end
 		end

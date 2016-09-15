@@ -1,5 +1,5 @@
 class FfnService
-	BASE_PATH = "http://www.fantasyfootballnerd.com/service/weekly-rankings/json/az3uzjv2qfsd"
+	BASE_PATH = "http://www.fantasyfootballnerd.com/service/weekly-rankings/json/k4gyeg9f75s3"
 	$positions = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF']
 
 	def self.call()
