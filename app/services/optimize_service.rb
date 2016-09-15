@@ -205,6 +205,7 @@ class OptimizeService
 					qb_helper(rw_lineup)
 				end
 			end
+			rw_lineup = nil
 		end
 		def qb_helper(qb_helper_lineup)
 			qb_lineup = Lineup.new
@@ -222,6 +223,8 @@ class OptimizeService
 				end
 				count += 1
 			end
+			qb_lineup = nil
+			qb_helper_lineup = nil
 		end
 
 		# def rb_helper(player)
@@ -272,6 +275,8 @@ class OptimizeService
 				end
 				count += 1
 			end
+			te_lineup = nil
+			te_helper_lineup = nil
 		end
 		def k_helper(k_helper_lineup, player)
 			k_lineup = Lineup.new
@@ -290,6 +295,8 @@ class OptimizeService
 				end
 				count += 1
 			end
+			k_lineup = nil
+			k_helper_lineup = nil
 		end
 		def def_helper(def_helper_lineup, player)
 			def_lineup = Lineup.new
@@ -308,6 +315,8 @@ class OptimizeService
 				end
 				count += 1
 			end
+			def_lineup = nil
+			def_helper_lineup = nil
 		end
 		def final_helper(final_helper_lineup, player)
 			final_lineup = Lineup.new
@@ -322,5 +331,7 @@ class OptimizeService
 			#else
 				#puts "INVALID"
 			#end
+			final_helper = nil
+			final_helper_lineup = nil
 		end	
 end
