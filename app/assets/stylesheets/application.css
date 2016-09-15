@@ -30,10 +30,21 @@
  	}
 #home-form {
 	margin-bottom: 10%;
+	padding: 5%;
+	border: yellow 1px solid;
 }
-#home-form button{
-	font-weight: bold;
-	padding: 3%;
+	#home-form h4{
+		margin: 3% 0% 5% 0%;
+	}
+	#home-form button{
+		font-weight: bold;
+		padding: 5%;
+		margin: 5%;
+		border-radius: 5%;
+		font-size: 1.25em;
+	}
+.red{
+	color: red;
 }
 .lineup-group {
 	margin: 5% 0%;
@@ -53,12 +64,14 @@
 .lineup, #home-form {
 	border: 1px solid grey;
 	background-color: white;
-	/*border-radius: 20%;*/
 	padding: 1% 0%;
 }
 	.lineup h5, #home-header, #home-form button {
 		background-color: green;
 		color: white;
+	}
+	.lineup {
+		margin-bottom: 3%;
 	}
 
 
