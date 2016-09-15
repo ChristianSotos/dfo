@@ -2,8 +2,10 @@ class FfnService
 	BASE_PATH = "http://www.fantasyfootballnerd.com/service/weekly-rankings/json/az3uzjv2qfsd"
 	$positions = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF']
 
-	def self.call(scoring, week)
+	def self.call()
 		players = {}
+		week = 1
+		scoring = 1
 		for i in 0..6 do
 		  	uri = URI.parse([BASE_PATH, $positions[i], week, scoring].join('/'))
 		  	http = Net::HTTP.new(uri.host, uri.port)

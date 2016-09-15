@@ -1,7 +1,7 @@
 class LineupService
 	def self.call(params)
 	  #binding.pry
-      all_lineups = FfnService.call(params['scoring'], params['week'])
+      all_lineups = FfnService.call()
 	end
 end
 
@@ -26,15 +26,14 @@ class Lineup
 		self
 	end
 
-	def add_player(ps, nm, mn, mx, av, pr)
-		player = Position.new(ps, nm, mn, mx, av, pr)
+	def add_player(player)
 		@roster << player
-		@min_score += mn.to_f
-		@max_score += mx.to_f
-		@avg_score += av.to_f
-		@price += pr.to_i
-		@lineup_count[ps] -= 1
-		@players_used[nm] = true
+		@min_score += player.min_score
+		@max_score += player.max_score
+		@avg_score += player.avg_score
+		@price += player.price
+		@lineup_count[player.position] -= 1
+		@players_used[player.name] = true
 		self
 	end
 end
