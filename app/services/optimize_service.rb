@@ -7,13 +7,14 @@ class OptimizeService
 	def call(players)
 		@all_lineups = []
 		@all_players = player_creator(players)
+		@valid_checker = valid_creator
 		@rb_combos = rb_combo_creator
 		@wr_combos = wr_combo_creator
-		@valid_checker = valid_creator
+		@rw_combos = rw_combo_creator
 		#@valid_score = valid_score_helper
 		#@min_score = 0
 
-		qb_helper
+		rw_helper
 
 		puts @all_lineups.count
 		return @all_lineups
@@ -78,8 +79,8 @@ class OptimizeService
 			
 			puts rb_array
 
-			for i in 0...10 do
-				for j in (i+1)...10 do
+			for i in 0...13 do
+				for j in (i+1)...13 do
 					insert_check = true
 					for k in 0...rb_combo_array.count do
 						if (rb_array[i].avg_score + rb_array[j].avg_score) > (rb_combo_array[k][0].avg_score + rb_combo_array[k][1].avg_score)
@@ -112,9 +113,9 @@ class OptimizeService
 					wr_array << player
 				end
 			end
-			for i in 0...10 do
-				for j in (i+1)...10 do
-					for k in (j+1)...10 do
+			for i in 0...13 do
+				for j in (i+1)...13 do
+					for k in (j+1)...13 do
 						insert_check = true
 						for n in 0...wr_combo_array.count do
 							if (wr_array[i].avg_score + wr_array[j].avg_score + wr_array[k].avg_score) > (wr_combo_array[n][0].avg_score + wr_combo_array[n][1].avg_score + wr_combo_array[n][2].avg_score)
@@ -132,10 +133,22 @@ class OptimizeService
 
 			return wr_combo_array
 		end
+		def rw_combo_creator
+			rw_combo_array = []
+			for i in 0...@rb_combos.count do
+				for j in 0...@wr_combos.count do
+					if (@rb_combos[i][0].price.to_i + @rb_combos[i][1].price.to_i + @wr_combos[j][0].price.to_i + @wr_combos[j][1].price.to_i + @wr_combos[j][2].price.to_i + valid_checker['QB']) <= 60000
+						rw_combo_array << [@rb_combos[i][0], @rb_combos[i][1], @wr_combos[j][0], @wr_combos[j][1], @wr_combos[j][2]]
+					end
+					puts rw_combo_array.count
+				end
+			end
+			return rw_combo_array
+		end
 
 		#create object of minimum possible price moving forward from a given position
 		def valid_creator
-			def valid_tkd_helper(pos)
+			def valid_helper(pos)
 				pos_min = nil
 				@all_players[pos].each do |player|
 					if pos_min
@@ -148,42 +161,18 @@ class OptimizeService
 				end
 				return pos_min
 			end
-			def valid_rw_helper(pos)
-				pos_min = nil;
-				if pos == "WR"
-					pos_array = @wr_combos
-				end
-				if pos == "RB"
-					pos_array = @rb_combos
-				end
-				for i in 0...pos_array.count do
-					wr_sum = 0
-					for j in 0...pos_array[i].count do
-						wr_sum += pos_array[i][j].price.to_i
-					end
-					if pos_min
-						if wr_sum < pos_min
-							pos_min = wr_sum
-						end
-					else
-						pos_min = wr_sum
-					end
-				end
-				return pos_min
-			end
 
 			valid_checker_obj = {
-				"RB" => valid_rw_helper("RB"),
-				"WR" => valid_rw_helper("WR"),
-				"TE" => valid_tkd_helper("TE"),
-				"K" => valid_tkd_helper("K"),
-				"DEF" => valid_tkd_helper("DEF")
+				"QB" => valid_helper("QB"),
+				"TE" => valid_helper("TE"),
+				"K" => valid_helper("K"),
+				"DEF" => valid_helper("DEF")
 			}
 
 			valid_checker_obj['K'] += valid_checker_obj['DEF']
 			valid_checker_obj['TE'] += valid_checker_obj['K']
-			valid_checker_obj['WR'] += valid_checker_obj['TE']
-			valid_checker_obj['RB'] += valid_checker_obj['WR']
+			valid_checker_obj['QB'] += valid_checker_obj['TE']
+
 
 			return valid_checker_obj
 		end
@@ -206,70 +195,84 @@ class OptimizeService
 		# end
 
 		#BEGIN LINEUP CREATIONS
-		def qb_helper
-			count = 0
-			@all_players['QB'].each do |player|
-				break if count >= 10
-				if ((player.price + @valid_checker['RB']) <= 60000)
-					rb_helper(player)
+		def rw_helper
+			for i in 0...@rw_combos.count do
+				rw_lineup = Lineup.new
+				for j in 0...@rw_combos[i].count do
+					rw_lineup.add_player(@rw_combos[i][j])
+				end
+				if ((rw_lineup.price.to_i + valid_checker['QB']) <= 60000)
+					qb_helper(rw_lineup)
 				else
-					puts player.avg_score
-					puts @valid_score['RB']
+					rw_lineup = nil
+				end
+			end
+		end
+		def qb_helper(qb_helper_lineup)
+			qb_lineup = Lineup.new
+			qb_helper_lineup.roster.each do |ply|
+				qb_lineup.add_player(ply)
+			end
+			# if (qb_lineup.price.to_i + @valid_checker['QB']) <= 60000
+			count = 0
+			@all_players['QB'].each do |qb|
+				break if count >= 13
+				if (qb_lineup.price.to_i + qb.price.to_i + @valid_checker['TE']) <= 60000
+					te_helper(qb_lineup, qb)
+				else
 					puts "QB INVALID"
 				end
 				count += 1
 			end
 		end
 
-		def rb_helper(player)
-			for i in 0...@rb_combos.count
-				rb_lineup = Lineup.new
-				rb_lineup.add_player(player)
-				rb_lineup.add_player(@rb_combos[i][0])
-				rb_lineup.add_player(@rb_combos[i][1])
-				if ((rb_lineup.price.to_i + @valid_checker['WR']) <= 60000)
-					wr_helper(rb_lineup)
-				else
-					#puts "RB INVALID"
-				end
-			end
-		end
-		def wr_helper(wr_helper_lineup)
-			for i in 0...@wr_combos.count
-				wr_lineup = Lineup.new
-				wr_helper_lineup.roster.each do |ply|
-					wr_lineup.add_player(ply)
-				end
-				for j in 0...@wr_combos[i].count
-					wr_lineup.add_player(@wr_combos[i][j])
-				end
-				if ((wr_lineup.price.to_i + @valid_checker['TE']) <= 60000)
-					te_helper(wr_lineup)
-				else
-					#puts "WR INVALID"
-				end
-			end
+		# def rb_helper(player)
+		# 	for i in 0...@rb_combos.count
+		# 		rb_lineup = Lineup.new
+		# 		rb_lineup.add_player(player)
+		# 		rb_lineup.add_player(@rb_combos[i][0])
+		# 		rb_lineup.add_player(@rb_combos[i][1])
+		# 		if ((rb_lineup.price.to_i + @valid_checker['WR']) <= 60000)
+		# 			wr_helper(rb_lineup)
+		# 		else
+		# 			#puts "RB INVALID"
+		# 		end
+		# 	end
+		# end
+		# def wr_helper(wr_helper_lineup)
+		# 	for i in 0...@wr_combos.count
+		# 		wr_lineup = Lineup.new
+		# 		wr_helper_lineup.roster.each do |ply|
+		# 			wr_lineup.add_player(ply)
+		# 		end
+		# 		for j in 0...@wr_combos[i].count
+		# 			wr_lineup.add_player(@wr_combos[i][j])
+		# 		end
+		# 		if ((wr_lineup.price.to_i + @valid_checker['TE']) <= 60000)
+		# 			te_helper(wr_lineup)
+		# 		else
+		# 			#puts "WR INVALID"
+		# 		end
+		# 	end
 
-		end
+		# end
 
-		def te_helper(te_helper_lineup)
+		def te_helper(te_helper_lineup, player)
 			te_lineup = Lineup.new
 			te_helper_lineup.roster.each do |ply|
 				te_lineup.add_player(ply)
 			end
-			if te_lineup.price.to_i <= 60000
-				count = 0
-				@all_players['TE'].each do |te|
-					break if count >= 10
-					if ((te_lineup.price.to_i + @valid_checker['K']) <= 60000)
-						k_helper(te_lineup, te)
-					else
-						#puts "TE INVALID"
-					end
-					count += 1
+			te_lineup.add_player(player)
+			# if (te_lineup.price.to_i + @valid_checker['TE']) <= 60000
+			count = 0
+			@all_players['TE'].each do |te|
+				break if count >= 13
+				if (te_lineup.price.to_i + te.price.to_i + @valid_checker['K']) <= 60000
+					k_helper(te_lineup, te)
+				else
+					puts "TE INVALID"
 				end
-			else
-				#puts "INVALID"
+				count += 1
 			end
 		end
 		def k_helper(k_helper_lineup, player)
@@ -277,20 +280,17 @@ class OptimizeService
 			k_helper_lineup.roster.each do |ply|
 				k_lineup.add_player(ply)
 			end
-			if k_lineup.price.to_i <= 60000
-				k_lineup.add_player(player)
-				count = 0
-				@all_players['K'].each do |k|
-					break if count >= 10
-					if ((k_lineup.price.to_i + @valid_checker['DEF']) <= 60000)
-						def_helper(k_lineup, k)
-					else
-						#puts "K INVALID"
-					end
-					count += 1
+			k_lineup.add_player(player)
+			# if (k_lineup.price.to_i + @valid_checker['K']) <= 60000
+			count = 0
+			@all_players['K'].each do |k|
+				break if count >= 13
+				if (k_lineup.price.to_i + k.price.to_i + @valid_checker['DEF']) <= 60000
+					def_helper(k_lineup, k)
+				else
+					puts "K INVALID"
 				end
-			else
-				#puts "INVALID"
+				count += 1
 			end
 		end
 		def def_helper(def_helper_lineup, player)
@@ -298,16 +298,17 @@ class OptimizeService
 			def_helper_lineup.roster.each do |ply|
 				def_lineup.add_player(ply)
 			end
-			if def_lineup.price.to_i <= 60000
-				def_lineup.add_player(player)
-				count = 0
-				@all_players['DEF'].each do |de|
-					break if count >= 10
+			def_lineup.add_player(player)
+			# if (def_lineup.price.to_i + @valid_checker['DEF']) <= 60000
+			count = 0
+			@all_players['DEF'].each do |de|
+				break if count >= 13
+				if (def_lineup.price.to_i + de.price.to_i) <= 60000
 					final_helper(def_lineup, de)
-					count += 1
+				else
+					puts "DEF INVALID"
 				end
-			else
-				#puts "INVALID"
+				count += 1
 			end
 		end
 		def final_helper(final_helper_lineup, player)
@@ -316,12 +317,12 @@ class OptimizeService
 				final_lineup.add_player(ply)
 			end
 			final_lineup.add_player(player)
-			if final_lineup.price.to_i <= 60000
+			#if final_lineup.price.to_i <= 60000
 				#puts final_lineup.players_used
-				@all_lineups << final_lineup
-				puts @all_lineups.count
-			else
+			@all_lineups << final_lineup
+			puts @all_lineups.count
+			#else
 				#puts "INVALID"
-			end
+			#end
 		end	
 end
