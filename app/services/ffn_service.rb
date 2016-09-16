@@ -5,7 +5,7 @@ class FfnService
 	def self.call()
 		players = {}
 		week = 2
-		scoring = 1
+		scoring = 0
 		for i in 0..6 do
 		  	uri = URI.parse([BASE_PATH, $positions[i], week, scoring].join('/'))
 		  	http = Net::HTTP.new(uri.host, uri.port)
