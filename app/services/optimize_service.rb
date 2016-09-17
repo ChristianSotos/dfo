@@ -79,8 +79,8 @@ class OptimizeService
 			
 			puts rb_array
 
-			for i in 0...13 do
-				for j in (i+1)...13 do
+			for i in 0...11 do
+				for j in (i+1)...11 do
 					insert_check = true
 					for k in 0...rb_combo_array.count do
 						if (rb_array[i].avg_score + rb_array[j].avg_score) > (rb_combo_array[k][0].avg_score + rb_combo_array[k][1].avg_score)
@@ -113,9 +113,9 @@ class OptimizeService
 					wr_array << player
 				end
 			end
-			for i in 0...13 do
-				for j in (i+1)...13 do
-					for k in (j+1)...13 do
+			for i in 0...11 do
+				for j in (i+1)...11 do
+					for k in (j+1)...11 do
 						insert_check = true
 						for n in 0...wr_combo_array.count do
 							if (wr_array[i].avg_score + wr_array[j].avg_score + wr_array[k].avg_score) > (wr_combo_array[n][0].avg_score + wr_combo_array[n][1].avg_score + wr_combo_array[n][2].avg_score)
@@ -215,7 +215,7 @@ class OptimizeService
 			# if (qb_lineup.price.to_i + @valid_checker['QB']) <= 60000
 			count = 0
 			@all_players['QB'].each do |qb|
-				break if count >= 13
+				break if count >= 11
 				if (qb_lineup.price.to_i + qb.price.to_i + @valid_checker['TE']) <= 60000
 					te_helper(qb_lineup, qb)
 				else
@@ -267,7 +267,7 @@ class OptimizeService
 			# if (te_lineup.price.to_i + @valid_checker['TE']) <= 60000
 			count = 0
 			@all_players['TE'].each do |te|
-				break if count >= 13
+				break if count >= 11
 				if (te_lineup.price.to_i + te.price.to_i + @valid_checker['K']) <= 60000
 					k_helper(te_lineup, te)
 				else
@@ -287,7 +287,7 @@ class OptimizeService
 			# if (k_lineup.price.to_i + @valid_checker['K']) <= 60000
 			count = 0
 			@all_players['K'].each do |k|
-				break if count >= 13
+				break if count >= 11
 				if (k_lineup.price.to_i + k.price.to_i + @valid_checker['DEF']) <= 60000
 					def_helper(k_lineup, k)
 				else
@@ -307,7 +307,7 @@ class OptimizeService
 			# if (def_lineup.price.to_i + @valid_checker['DEF']) <= 60000
 			count = 0
 			@all_players['DEF'].each do |de|
-				break if count >= 13
+				break if count >= 11
 				if (def_lineup.price.to_i + de.price.to_i) <= 60000
 					final_helper(def_lineup, de)
 				else
