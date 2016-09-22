@@ -20,11 +20,11 @@ class OptimizeService
 
 		@all_players = player_creator(players)
 		@valid_price = valid_price_creator
+		@valid_score = valid_score_creator
 		@rb_combos = rb_combo_creator
 		@wr_combos = wr_combo_creator
 		@rw_combos = rw_combo_creator
 		@kd_combos = kd_combo_creator
-		@valid_score = valid_score_creator
 
 		rw_helper
 
