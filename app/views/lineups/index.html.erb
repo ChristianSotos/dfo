@@ -2,7 +2,7 @@
 	<div id="avg-lineups" class="small-12 columns lineup-group">
 		<h2>Best Overall Lineups</h2>
 		<div class="row">
-		<%for i in 0...6 do %>
+		<%for i in 0...@ol.count do %>
 			<div class="small-6 medium-4 large-2 columns lineup">
 				<h5>Lineup <%=i+1%></h5>
 				<ul>
@@ -12,9 +12,9 @@
 				</ul>
 				<h5>Scores</h5>
 				<ul>
-					<li>Average Score: <%=@ol[i].avg_score%></li>
-					<li>High Score: <%=@ol[i].max_score%></li>
-					<li>Low Score: <%=@ol[i].min_score%></li>
+					<li>Average Score: <%=@ol[i].avg_score.round(2)%></li>
+					<li>High Score: <%=@ol[i].max_score.round(2)%></li>
+					<li>Low Score: <%=@ol[i].min_score.round(2)%></li>
 				</ul>
 				<h5>Total Budget</h5>
 				<p>$<%=@ol[i].price%></p>
@@ -25,7 +25,7 @@
 	<div id="high-lineups" class="small-12 columns lineup-group">
 		<h2>Highest Ceiling Lineups</h2>
 		<div class="row">
-			<%for i in 0...6 do %>
+			<%for i in 0...@rl.count do %>
 			<div class="small-6 medium-4 large-2 columns lineup">
 				<h5>Lineup <%=i+1%></h5>
 				<ul>
@@ -35,9 +35,9 @@
 				</ul>
 				<h5>Scores</h5>
 				<ul>
-					<li>Average Score: <%=@rl[i].avg_score%></li>
-					<li>High Score: <%=@rl[i].max_score%></li>
-					<li>Low Score: <%=@rl[i].min_score%></li>
+					<li>Average Score: <%=@rl[i].avg_score.round(2)%></li>
+					<li>High Score: <%=@rl[i].max_score.round(2)%></li>
+					<li>Low Score: <%=@rl[i].min_score.round(2)%></li>
 				</ul>
 				<h5>Total Budget</h5>
 				<p>$<%=@rl[i].price%></p>
@@ -48,7 +48,7 @@
 	<div id="low-lineups" class="small-12 columns lineup-group">	
 		<h2>Lowest Risk Lineups</h2>
 		<div class="row">
-			<%for i in 0...6 do %>
+			<%for i in 0...@sl.count do %>
 			<div class="small-6 medium-4 large-2 columns lineup">
 				<h5>Lineup <%=i+1%></h5>
 				<ul>
@@ -58,9 +58,9 @@
 				</ul>
 				<h5>Scores</h5>
 				<ul>
-					<li>Average Score: <%=@sl[i].avg_score%></li>
-					<li>High Score: <%=@sl[i].max_score%></li>
-					<li>Low Score: <%=@sl[i].min_score%></li>
+					<li>Average Score: <%=@sl[i].avg_score.round(2)%></li>
+					<li>High Score: <%=@sl[i].max_score.round(2)%></li>
+					<li>Low Score: <%=@sl[i].min_score.round(2)%></li>
 				</ul>
 				<h5>Total Budget</h5>
 				<p>$<%=@sl[i].price%></p>

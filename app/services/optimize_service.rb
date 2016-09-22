@@ -10,20 +10,21 @@ class OptimizeService
 			'sl' => [],
 			'rl' => []
 		}
-		
+
 		@rb_limit = 20
-		@wr_limit = 50
+		@wr_limit = 40
 		@qb_limit = 30
-		@te_limit = 40
+		@te_limit = 30
 		@k_limit = 30
 		@def_limit = 30
 
 		@all_players = player_creator(players)
-		@valid_checker = valid_creator
+		@valid_price = valid_price_creator
 		@rb_combos = rb_combo_creator
 		@wr_combos = wr_combo_creator
 		@rw_combos = rw_combo_creator
-		@valid_score = valid_score_helper
+		@kd_combos = kd_combo_creator
+		@valid_score = valid_score_creator
 
 		rw_helper
 
@@ -37,9 +38,11 @@ class OptimizeService
 		
 		#create object of player instances
 		def player_creator(players)
-			def pc_helper(pos, players)
+			def pc_helper(pos, players, pos_limit)
 				pos_array = []
+				count = 0
 				players[pos]['Rankings'].each do |player|
+					break if count > pos_limit
 					player_db = Player.find_by(name: player['name'])
 					if player_db
 						insert_check = true
@@ -53,18 +56,20 @@ class OptimizeService
 						if insert_check
 							pos_array << Position.new(pos, player['name'], player['pprLow'], player['pprHigh'], player['ppr'], player_db.price)
 						end
+						count += 1
 					end
+					puts "PLAYER CREATOR"
 				end
 				return pos_array
 			end
 
 			player_obj = {
-				"QB" => pc_helper("QB", players),
-				"RB" => pc_helper("RB", players),
-				"WR" => pc_helper("WR", players),
-				"TE" => pc_helper("TE", players),
-				"K" => pc_helper("K", players),
-				"DEF" => pc_helper("DEF", players)
+				"QB" => pc_helper("QB", players, @qb_limit),
+				"RB" => pc_helper("RB", players, @rb_limit),
+				"WR" => pc_helper("WR", players, @wr_limit),
+				"TE" => pc_helper("TE", players, @te_limit),
+				"K" => pc_helper("K", players, @k_limit),
+				"DEF" => pc_helper("DEF", players, @def_limit)
 			}
 
 			return player_obj
@@ -73,23 +78,13 @@ class OptimizeService
 		#pre determine all RB & WR combinations
 		def rb_combo_creator
 			rb_array = []
-			rb_combo_array = []
 			@all_players['RB'].each do |player|
-				insert_check = true
-				for i in 0...rb_array.count do
-					if player.avg_score > rb_array[i].avg_score
-						rb_array.insert(i, player)
-						insert_check = false
-						break
-					end
-				end
-				if insert_check
-					rb_array << player
-				end
+				rb_array << player
 			end
 
-			for i in 0...@rb_limit do
-				for j in (i+1)...@rb_limit do
+			rb_combo_array = []
+			for i in 0...rb_array.count do
+				for j in (i+1)...rb_array.count do
 					insert_check = true
 					for k in 0...rb_combo_array.count do
 						if (rb_array[i].avg_score + rb_array[j].avg_score) > (rb_combo_array[k][0].avg_score + rb_combo_array[k][1].avg_score)
@@ -101,6 +96,7 @@ class OptimizeService
 					if insert_check
 						rb_combo_array << [rb_array[i], rb_array[j]]
 					end
+					puts "RB COMBO CREATOR"
 				end
 			end
 
@@ -108,23 +104,14 @@ class OptimizeService
 		end
 		def wr_combo_creator
 			wr_array = []
-			wr_combo_array = []
 			@all_players['WR'].each do |player|
-				insert_check = true
-				for i in 0...wr_array.count do
-					if player.avg_score > wr_array[i].avg_score
-						wr_array.insert(i, player)
-						insert_check = false
-						break
-					end
-				end
-				if insert_check
-					wr_array << player
-				end
+				wr_array << player
 			end
-			for i in 0...@wr_limit do
-				for j in (i+1)...@wr_limit do
-					for k in (j+1)...@wr_limit do
+
+			wr_combo_array = []
+			for i in 0...wr_array.count do
+				for j in (i+1)...wr_array.count do
+					for k in (j+1)...wr_array.count do
 						insert_check = true
 						for n in 0...wr_combo_array.count do
 							if (wr_array[i].avg_score + wr_array[j].avg_score + wr_array[k].avg_score) > (wr_combo_array[n][0].avg_score + wr_combo_array[n][1].avg_score + wr_combo_array[n][2].avg_score)
@@ -136,6 +123,7 @@ class OptimizeService
 						if insert_check
 							wr_combo_array << [wr_array[i], wr_array[j], wr_array[k]]
 						end
+					puts "WR COMBO CREATOR"
 					end
 				end
 			end
@@ -146,17 +134,35 @@ class OptimizeService
 			rw_combo_array = []
 			for i in 0...@rb_combos.count do
 				for j in 0...@wr_combos.count do
-					if (@rb_combos[i][0].price.to_i + @rb_combos[i][1].price.to_i + @wr_combos[j][0].price.to_i + @wr_combos[j][1].price.to_i + @wr_combos[j][2].price.to_i + valid_checker['QB']) <= 60000
-						rw_combo_array << [@rb_combos[i][0], @rb_combos[i][1], @wr_combos[j][0], @wr_combos[j][1], @wr_combos[j][2]]
-					end
-					# puts rw_combo_array.count
+					rw_combo_array << [@rb_combos[i][0], @rb_combos[i][1], @wr_combos[j][0], @wr_combos[j][1], @wr_combos[j][2]]
+					puts "RW COMBO CREATOR"
 				end
 			end
 			return rw_combo_array
 		end
+		def kd_combo_creator
+			kd_combo_array = []
+			@all_players['K'].each do |k|
+				@all_players['DEF'].each do |de|
+					insert_check = true
+					for i in 0...kd_combo_array.count do
+						if (k.avg_score.to_i + de.avg_score.to_i) > (kd_combo_array[i][0].avg_score.to_i + kd_combo_array[i][1].avg_score.to_i)
+							kd_combo_array.insert(i, [k, de])
+							insert_check = false
+							break
+						end
+					end
+					if insert_check
+						kd_combo_array << [k, de]
+					end
+					puts "KD COMBO CREATOR"
+				end
+			end
+			return kd_combo_array
+		end
 
 		#create object of minimum possible price moving forward from a given position
-		def valid_creator
+		def valid_price_creator
 			def valid_helper(pos)
 				pos_min = nil
 				@all_players[pos].each do |player|
@@ -171,51 +177,124 @@ class OptimizeService
 				return pos_min
 			end
 
-			valid_checker_obj = {
+			valid_price_obj = {
 				"QB" => valid_helper("QB"),
 				"TE" => valid_helper("TE"),
-				"K" => valid_helper("K"),
-				"DEF" => valid_helper("DEF")
+				"K" => (valid_helper("K") + valid_helper("DEF"))
 			}
 
-			valid_checker_obj['K'] += valid_checker_obj['DEF']
-			valid_checker_obj['TE'] += valid_checker_obj['K']
-			valid_checker_obj['QB'] += valid_checker_obj['TE']
+			valid_price_obj['TE'] += valid_price_obj['K']
+			valid_price_obj['QB'] += valid_price_obj['TE']
 
-
-			return valid_checker_obj
+			return valid_price_obj
 		end
 
-		def valid_score_helper
-			valid_score_obj = { 
-				"QB" => @all_players['QB'][0].avg_score,
-				"TE" => @all_players['TE'][0].avg_score,
-				"K" => @all_players['K'][0].avg_score,
-				"DEF" => @all_players['DEF'][0].avg_score
-			}
-			valid_score_obj['K'] += valid_score_obj['DEF']
-			valid_score_obj['TE'] += valid_score_obj['K']
-			valid_score_obj['QB'] += valid_score_obj['TE']
+		def valid_score_creator
+			def valid_helper(pos)
+				rl_max = nil
+				@all_players[pos].each do |player|
+					if rl_max
+						if player.max_score > rl_max
+							rl_max = player.max_score
+						end	
+					else
+						rl_max = player.max_score
+					end
+				end
 
-			puts valid_score_obj
+				sl_max = nil
+				@all_players[pos].each do |player|
+					if sl_max
+						if player.min_score > sl_max
+							sl_max = player.min_score
+						end	
+					else
+						sl_max = player.min_score
+					end
+				end
+
+				helper_obj = {
+					'ol' => @all_players[pos][0].avg_score,
+					'rl' => rl_max,
+					'sl' => sl_max
+				}
+
+				return helper_obj
+			end
+
+			valid_score_obj = { 
+				"QB" => valid_helper('QB'),
+				"TE" => valid_helper('TE'),
+				"K" => valid_helper('K'),
+				"DEF" => valid_helper('DEF')
+			}
+
+			valid_score_obj['K']['ol'] += valid_score_obj['DEF']['ol']
+			valid_score_obj['K']['rl'] += valid_score_obj['DEF']['rl']
+			valid_score_obj['K']['sl'] += valid_score_obj['DEF']['sl']
+
+			valid_score_obj['TE']['ol'] += valid_score_obj['K']['ol']
+			valid_score_obj['TE']['rl'] += valid_score_obj['K']['rl']
+			valid_score_obj['TE']['sl'] += valid_score_obj['K']['sl']
+
+			valid_score_obj['QB']['ol'] += valid_score_obj['TE']['ol']
+			valid_score_obj['QB']['rl'] += valid_score_obj['TE']['rl']
+			valid_score_obj['QB']['sl'] += valid_score_obj['TE']['sl']
+
 			return valid_score_obj
+		end
+
+		def validator(lineup, player_array, val_pos = nil)
+			valid_price = lineup.price.to_i
+			valid_ol = lineup.avg_score.to_i
+			valid_rl = lineup.max_score.to_i
+			valid_sl = lineup.min_score.to_i
+
+			if player_array
+				player_array.each do |ply|
+					valid_price += ply.price.to_i
+					valid_ol += ply.avg_score.to_i
+					valid_rl += ply.max_score.to_i
+					valid_sl += ply.min_score.to_i
+				end
+			end
+
+			if val_pos
+				valid_price += @valid_price[val_pos].to_i
+				valid_ol += @valid_score[val_pos]['ol'].to_i
+				valid_rl += @valid_score[val_pos]['rl'].to_i
+				valid_sl += @valid_score[val_pos]['sl'].to_i
+			end
+
+			if valid_price > 60000
+				return false
+			end
+			if @all_lineups['ol'].count < 12
+				return true
+			end
+			if valid_ol > @all_lineups['ol'].last.avg_score
+				return true
+			end
+			if valid_rl > @all_lineups['rl'].last.max_score
+				return true
+			end
+			if valid_sl > @all_lineups['sl'].last.min_score
+				return true
+			end
+
+			return false
 		end
 
 		#BEGIN LINEUP CREATIONS
 		def rw_helper
 			for i in 0...@rw_combos.count do
+				puts i.to_s + "/" + @rw_combos.count.to_s
 				rw_lineup = Lineup.new
 				for j in 0...@rw_combos[i].count do
 					rw_lineup.add_player(@rw_combos[i][j])
 				end
-				if ((rw_lineup.price.to_i + valid_checker['QB']) <= 60000)
-					if @all_lineups['ol'].count < 6
-						qb_helper(rw_lineup)
-					else
-						if (rw_lineup.avg_score.to_i + @valid_score['QB']) > @all_lineups['ol'][5].avg_score
-							qb_helper(rw_lineup)
-						end
-					end
+				if validator(rw_lineup, [], 'QB')
+					qb_helper(rw_lineup)
 				end
 				rw_lineup = nil
 			end
@@ -226,24 +305,10 @@ class OptimizeService
 			qb_helper_lineup.roster.each do |ply|
 				qb_lineup.add_player(ply)
 			end
-			# if (qb_lineup.price.to_i + @valid_checker['QB']) <= 60000
-			count = 0
 			@all_players['QB'].each do |qb|
-				break if count > @qb_limit
-				if (qb_lineup.price.to_i + qb.price.to_i + @valid_checker['TE']) <= 60000
-					if @all_lineups['ol'].count < 6
-						te_helper(qb_lineup, qb)
-					else
-						if (qb_lineup.avg_score.to_i + qb.avg_score.to_i + @valid_score['TE']) > @all_lineups['ol'][5].avg_score
-							te_helper(qb_lineup, qb)
-						else
-							puts "QB SCORE INVALID"
-						end
-					end
-				else
-					puts "QB PRICE INVALID"
+				if validator(qb_lineup, [qb], 'TE')
+					te_helper(qb_lineup, qb)
 				end
-				count += 1
 			end
 			qb_lineup = nil
 			qb_helper_lineup = nil
@@ -255,99 +320,49 @@ class OptimizeService
 				te_lineup.add_player(ply)
 			end
 			te_lineup.add_player(player)
-			# if (te_lineup.price.to_i + @valid_checker['TE']) <= 60000
-			count = 0
 			@all_players['TE'].each do |te|
-				break if count > @te_limit
-				if (te_lineup.price.to_i + te.price.to_i + @valid_checker['K']) <= 60000
-					if @all_lineups['ol'].count < 6
-						k_helper(te_lineup, te)
-					else
-						if (te_lineup.avg_score.to_i + te.avg_score.to_i + @valid_score['K']) > @all_lineups['ol'][5].avg_score
-							k_helper(te_lineup, te)
-						else
-							puts "TE SCORE INVALID"
-						end
-					end
-					# k_helper(te_lineup, te)
-				else
-					puts "TE PRICE INVALID"
+				if validator(te_lineup, [te], 'K')
+					kd_helper(te_lineup, te)
 				end
-				count += 1
 			end
 			te_lineup = nil
 			te_helper_lineup = nil
 		end
 
-		def k_helper(k_helper_lineup, player)
-			k_lineup = Lineup.new
-			k_helper_lineup.roster.each do |ply|
-				k_lineup.add_player(ply)
+		def kd_helper(kd_helper_lineup, player)
+			kd_lineup = Lineup.new
+			kd_helper_lineup.roster.each do |ply|
+				kd_lineup.add_player(ply)
 			end
-			k_lineup.add_player(player)
-			# if (k_lineup.price.to_i + @valid_checker['K']) <= 60000
-			count = 0
-			@all_players['K'].each do |k|
-				break if count >= @k_limit
-				if (k_lineup.price.to_i + k.price.to_i + @valid_checker['DEF']) <= 60000
-					if @all_lineups['ol'].count < 6
-						def_helper(k_lineup, k)
-					else
-						if (k_lineup.avg_score.to_i + k.avg_score.to_i + @valid_score['DEF']) > @all_lineups['ol'][5].avg_score
-							def_helper(k_lineup, k)
-						else
-							puts "K SCORE INVALID"
-						end
-					end
-					# def_helper(k_lineup, k)
-				else
-					puts "K PRICE INVALID"
+			kd_lineup.add_player(player)
+			for i in 0...@kd_combos.count do
+				if validator(kd_lineup, [@kd_combos[i][0], @kd_combos[i][1]])
+					final_helper(kd_lineup, @kd_combos[i][0], @kd_combos[i][1])
 				end
-				count += 1
 			end
-			k_lineup = nil
-			k_helper_lineup = nil
 		end
 
-		def def_helper(def_helper_lineup, player)
-			def_lineup = Lineup.new
-			def_helper_lineup.roster.each do |ply|
-				def_lineup.add_player(ply)
-			end
-			def_lineup.add_player(player)
-			# if (def_lineup.price.to_i + @valid_checker['DEF']) <= 60000
-			count = 0
-			@all_players['DEF'].each do |de|
-				break if count >= @def_limit
-				if (def_lineup.price.to_i + de.price.to_i) <= 60000
-					final_helper(def_lineup, de)
-				else
-					puts "DEF INVALID"
-				end
-				count += 1
-			end
-			
-			def_lineup = nil
-			def_helper_lineup = nil
-		end
-
-		def final_helper(final_helper_lineup, player)
+		def final_helper(final_helper_lineup, player1, player2)
 			final_lineup = Lineup.new
 			final_helper_lineup.roster.each do |ply|
 				final_lineup.add_player(ply)
 			end
-			final_lineup.add_player(player)
+			final_lineup.add_player(player1)
+			final_lineup.add_player(player2)
+
 			ol_insert_check = true
-			if @all_lineups['ol'].count < 6
+			if @all_lineups['ol'].count < 12
 				for i in 0...@all_lineups['ol'].count
 					if final_lineup.avg_score > @all_lineups['ol'][i].avg_score
 						@all_lineups['ol'].insert(i, final_lineup)
+						puts final_lineup
 						ol_insert_check = false
 						break
 					end
 				end
 				if ol_insert_check
 					@all_lineups['ol'] << final_lineup
+					puts final_lineup
 					ol_insert_check = false
 				end
 			else
@@ -356,6 +371,7 @@ class OptimizeService
 						if final_lineup.avg_score > @all_lineups['ol'][i].avg_score
 							@all_lineups['ol'].insert(i, final_lineup)
 							@all_lineups['ol'].pop
+							puts final_lineup
 							insert_check = false
 							break
 						end
@@ -364,16 +380,18 @@ class OptimizeService
 			end
 
 			rl_insert_check = true
-			if @all_lineups['rl'].count < 6
+			if @all_lineups['rl'].count < 12
 				for i in 0...@all_lineups['rl'].count
 					if final_lineup.max_score > @all_lineups['rl'][i].max_score
 						@all_lineups['rl'].insert(i, final_lineup)
+						puts final_lineup
 						rl_insert_check = false
 						break
 					end
 				end
 				if rl_insert_check
 					@all_lineups['rl'] << final_lineup
+					puts final_lineup
 					rl_insert_check = false
 				end
 			else
@@ -382,6 +400,7 @@ class OptimizeService
 						if final_lineup.max_score > @all_lineups['rl'][i].max_score
 							@all_lineups['rl'].insert(i, final_lineup)
 							@all_lineups['rl'].pop
+							puts final_lineup
 							rl_insert_check = false
 							break
 						end
@@ -390,16 +409,18 @@ class OptimizeService
 			end
 
 			sl_insert_check = true
-			if @all_lineups['sl'].count < 6
+			if @all_lineups['sl'].count < 12
 				for i in 0...@all_lineups['sl'].count
 					if final_lineup.min_score > @all_lineups['sl'][i].min_score
 						@all_lineups['sl'].insert(i, final_lineup)
+						puts final_lineup
 						sl_insert_check = false
 						break
 					end
 				end
 				if sl_insert_check
 					@all_lineups['sl'] << final_lineup
+					puts final_lineup
 					sl_insert_check = false
 				end
 			else
@@ -408,14 +429,15 @@ class OptimizeService
 						if final_lineup.min_score > @all_lineups['sl'][i].min_score
 							@all_lineups['sl'].insert(i, final_lineup)
 							@all_lineups['sl'].pop
+							puts final_lineup
 							sl_insert_check = false
 							break
 						end
 					end
 				end
 			end
+
 			if ol_insert_check && rl_insert_check && sl_insert_check
-				puts final_lineup.players_used
 				final_lineup = nil
 			end
 			final_helper_lineup = nil

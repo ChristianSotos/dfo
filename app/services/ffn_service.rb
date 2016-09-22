@@ -1,13 +1,13 @@
 class FfnService
 	BASE_PATH = "http://www.fantasyfootballnerd.com/service/weekly-rankings/json/k4gyeg9f75s3"
-	$positions = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF']
+	@positions = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF']
 
 	def self.call()
 		players = {}
-		week = 2
+		week = 3
 		scoring = 0
 		for i in 0..6 do
-		  	uri = URI.parse([BASE_PATH, $positions[i], week, scoring].join('/'))
+		  	uri = URI.parse([BASE_PATH, @positions[i], week, scoring].join('/'))
 		  	http = Net::HTTP.new(uri.host, uri.port)
 		  	#to be able to access https URL, these lines should be added
 		  	http.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -17,7 +17,7 @@ class FfnService
 		  	data = response.body
 		  	#to parse JSON string, you may also use JSON.parse()
 		  	#JSON.load() turns the data into a hash
-		  	players[$positions[i]] = JSON.parse(data)
+		  	players[@positions[i]] = JSON.parse(data)
 		end
 		all_lineups = OptimizeService.call(players)
 	end
