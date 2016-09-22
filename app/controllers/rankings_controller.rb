@@ -4,6 +4,7 @@ class RankingsController < ApplicationController
 	end
 
 	def upload
+		Player.destroy_all();
 		Player.import(params[:rankings])
 		redirect_to :root
 	end

@@ -4,7 +4,7 @@ class FfnService
 
 	def self.call()
 		players = {}
-		week = 2
+		week = 3
 		scoring = 1
 		for i in 0..6 do
 		  	uri = URI.parse([BASE_PATH, $positions[i], week, scoring].join('/'))
