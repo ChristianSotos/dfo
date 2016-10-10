@@ -60,6 +60,11 @@
 		margin: 1%;
 		padding: 1%;
 	}
+	.lineup-group li{
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
 
 .lineup, #home-form {
 	border: 1px solid grey;

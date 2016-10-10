@@ -4,6 +4,7 @@
 		<div class="row">
 		<%for i in 0...@bl.count do %>
 			<div class="small-6 medium-4 large-2 columns lineup">
+				<input type='checkbox'>
 				<h5>Lineup <%=i+1%></h5>
 				<ul>
 				<% for j in 0...@bl[i].roster.count do%>
@@ -28,6 +29,7 @@
 		<div class="row">
 		<%for i in 0...@ol.count do %>
 			<div class="small-6 medium-4 large-2 columns lineup">
+				<input type='checkbox'>
 				<h5>Lineup <%=i+1%></h5>
 				<ul>
 				<% for j in 0...@ol[i].roster.count do%>
@@ -52,6 +54,7 @@
 		<div class="row">
 			<%for i in 0...@rl.count do %>
 			<div class="small-6 medium-4 large-2 columns lineup">
+				<input type='checkbox'>
 				<h5>Lineup <%=i+1%></h5>
 				<ul>
 				<% for j in 0...@rl[i].roster.count do%>
@@ -76,6 +79,7 @@
 		<div class="row">
 			<%for i in 0...@sl.count do %>
 			<div class="small-6 medium-4 large-2 columns lineup">
+				<input type='checkbox'>
 				<h5>Lineup <%=i+1%></h5>
 				<ul>
 				<% for j in 0...@sl[i].roster.count do%>
@@ -94,5 +98,29 @@
 			</div>
 		<%end%>
 		</div>
+	</div>
+
+	<div id='exposure' class='small-12 columns lineup-group'>
+	<% @exposure.each do |pos, arr| %>
+		<div class="small-6 medium-4 large-4 columns lineup">
+			<h5><%=pos%></h5>
+			<ul>
+			<% for i in 0...arr.count do %>
+				<li><%=arr[i]['name']%>:<%=arr[i]['perc'].round(1)%>%</li>
+			<% end %>
+			</ul>
+		</div>
+	<% end %>
+	</div>
+	<div id='scores' class='small-12 columns lineup-group'>
+	<% @scores.each do |cat, obj| %>
+		<div class='small-2 medium-2 large-2 columns lineup'>
+			<h5><%=cat%></h5>
+			<ul>
+				<li>Average: <%=obj['avg'].round(2)%></li>
+				<li>Total: <%=obj['total'].round(2)%></li>
+			</ul>
+		</div>
+	<% end %>
 	</div>
 </div>

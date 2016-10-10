@@ -23,7 +23,7 @@ class Lineup
 			'K' => 1,
 			'DEF' => 1
 		}
-		@players_used = {}
+		@players_used = []
 		self
 	end
 
@@ -35,13 +35,23 @@ class Lineup
 		@best_score += player.best_score
 		@price += player.price
 		@lineup_count[player.position] -= 1
-		@players_used[player.name] = true
+		@players_used << player.name
 		self
+	end
+
+	def get_scores
+		obj = {
+			'bl' => self.best_score,
+			'ol' => self.avg_score,
+			'rl' => self.max_score,
+			'sl' => self.min_score
+		}
+		return obj
 	end
 end
 
 class Position
-	attr_accessor :position, :name, :min_score, :max_score, :avg_score, :best_score, :price
+	attr_accessor :position, :name, :min_score, :max_score, :avg_score, :best_score, :price, :exposure
 	def initialize(ps, nm, mn, mx, av, pr)
 		@position = ps
 		@name = nm
@@ -50,5 +60,16 @@ class Position
 		@avg_score = av.to_f
 		@best_score = (mn.to_f + mx.to_f + av.to_f)/3
 		@price = pr.to_i
+		@exposure = 0
 	end
+
+	# def get_scores
+	# 	obj = {
+	# 		'bl' => self.best_score,
+	# 		'ol' => self.avg_score,
+	# 		'rl' => self.max_score,
+	# 		'sl' => self.min_score
+	# 	}
+	# 	return obj
+	# end
 end
